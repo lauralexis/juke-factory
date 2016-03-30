@@ -19,7 +19,9 @@ juke.controller('PlayerCtrl', function ($scope, $rootScope, PlayerFactory) {
   //   // $scope.$digest(); // re-computes current template only (this scope)
   //   $scope.$evalAsync(); // likely best, schedules digest if none happening
   // });
-
+  $scope.progress = function() {
+    return PlayerFactory.getProgress();
+  } 
   // state
   // $scope.currentSong;
   // $scope.playing = false;
@@ -74,3 +76,14 @@ juke.controller('PlayerCtrl', function ($scope, $rootScope, PlayerFactory) {
    $scope.prev = function prev () { PlayerFactory.prev() };
 
 });
+
+
+
+
+juke.controller('SideBarCtrl', function ($scope, $rootScope, PlayerFactory) {
+  $scope.viewAlbums = function() {
+    $rootScope.$broadcast('showAllAlbums');
+  }
+
+});
+

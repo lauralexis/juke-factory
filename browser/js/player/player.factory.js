@@ -1,6 +1,6 @@
 'use strict';
 
-juke.factory('PlayerFactory', function($http){
+juke.factory('PlayerFactory', function($http, $rootScope){
   // non-UI logic in here
     var mod = function (num, m) { 
       return ((num % m) + m) % m; 
@@ -16,11 +16,22 @@ juke.factory('PlayerFactory', function($http){
     var currentAlbum = null;
     var currentSong = null;
     var playing = false;
+    var progress = 0;
     var audio = document.createElement('audio');
-    //audio.on('update', function(event) {
-      //progress = audio.currentTime / audio.Duration;
-    //})
-    //var progress = 0;
+    audio.playbackRate = 40;
+    
+    audio.addEventListener('ended', function () {
+      playerObj.next();
+      $rootScope.$evalAsync(); // likely best, schedules digest if none happening
+    });
+
+
+
+    audio.addEventListener('timeupdate', function () {
+      progress = 100 * audio.currentTime / audio.duration;
+      // console.log(progress);
+      $rootScope.$digest();
+    });
 	  playerObj.start = function(song, songList){
       this.pause();
       if (songList != null) {
@@ -54,15 +65,14 @@ juke.factory('PlayerFactory', function($http){
       audio.pause();
       skip(1);
     },
-    playerObj.previous = function(){
+    playerObj.prev = function(){
       audio.pause();
       skip(-1);
     },
     playerObj.getProgress = function(){
-      if(!currentSong) {
-        return 0;
-      }
-      return  audio.currentTime / audio.duration;
+      return progress;
+      // $rootScope.$digest();
+      // return  audio.currentTime / audio.duration;
     }
     return playerObj;
 });
