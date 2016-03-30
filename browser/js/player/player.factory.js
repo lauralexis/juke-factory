@@ -8,8 +8,9 @@ juke.factory('PlayerFactory', function($http){
     var skip = function(interval) {
       if (!currentSong) return;
       var index = currentSong.albumIndex;
+      console.log("currentAlbum: ", currentAlbum)
       index = mod( (index + (interval || 1)), currentAlbum.length );
-      playerObj.start(currentAlbum[index]);
+      playerObj.start(currentAlbum[index], currentAlbum);
     }
     var playerObj = {};
     var currentAlbum = null;
